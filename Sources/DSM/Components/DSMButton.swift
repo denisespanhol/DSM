@@ -13,10 +13,7 @@ public enum DSMButtonStyle {
 }
 
 public struct DSMButton: View {
-    let title: String
-    let style: DSMButtonStyle
-    let isLoading: Bool
-    let action: () -> Void
+    @ObservedObject private var viewModel: DSMButtonViewModel
     
     public init(
         title: String,
@@ -24,34 +21,36 @@ public struct DSMButton: View {
         isLoading: Bool = false,
         action: @escaping () -> Void
     ) {
-        self.title = title
-        self.style = style
-        self.isLoading = isLoading
-        self.action = action
+        self.viewModel = DSMButtonViewModel(
+            title: title,
+            style: style,
+            isLoading: isLoading,
+            action: action
+        )
     }
     
     public var body: some View {
-        Button(action: action) {
+        Button(action: viewModel.handleTap) {
             ZStack {
-                if isLoading {
+                if viewModel.isLoading {
                     ProgressView()
-                        .tint(style == .primary ? .white : DSMColors.primary)
+                        .tint(viewModel.style == .primary ? .white : DSMColors.primary)
                 } else {
-                    Text(title)
+                    Text(viewModel.title)
                         .font(DSMTypography.button)
-                        .foregroundColor(style == .primary ? .white : DSMColors.primary)
+                        .foregroundColor(viewModel.style == .primary ? .white : DSMColors.primary)
                 }
             }
             .frame(maxWidth: .infinity)
             .frame(height: 50)
-            .background(style == .primary ? DSMColors.primary : Color.clear)
+            .background(viewModel.style == .primary ? DSMColors.primary : Color.clear)
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(DSMColors.primary, lineWidth: style == .secondary ? 2 : 0)
+                    .stroke(DSMColors.primary, lineWidth: viewModel.style == .secondary ? 2 : 0)
             )
             .cornerRadius(8)
         }
-        .disabled(isLoading)
+        .disabled(viewModel.isLoading)
     }
     
 }
