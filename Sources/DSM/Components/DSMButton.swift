@@ -39,7 +39,7 @@ public struct DSMButton: View {
                 } else {
                     Text(title)
                         .font(DSMTypography.button)
-                        .foregroundColor(style == .primary ? .white : DSColors.primary)
+                        .foregroundColor(style == .primary ? .white : DSMColors.primary)
                 }
             }
             .frame(maxWidth: .infinity)
