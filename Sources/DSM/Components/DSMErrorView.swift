@@ -8,13 +8,11 @@
 import SwiftUI
 
 public struct DSMErrorView: View {
-    let message: String
     
-    let onRetry: () -> Void
+    @ObservedObject private var viewModel: DSMErrorViewModel
     
-    public init(message: String, onRetry: @escaping () -> Void) {
-        self.message = message
-        self.onRetry = onRetry
+    public init(viewModel: DSMErrorViewModel) {
+        self.viewModel = viewModel
     }
     
     public var body: some View {
@@ -24,10 +22,10 @@ public struct DSMErrorView: View {
                 .font(.system(size: 48))
                 .foregroundColor(DSMColors.error)
             
-            DSMLabel(text: message, variant: .body)
+            DSMLabel(text: viewModel.message, variant: .body)
                 .multilineTextAlignment(.center)
             
-            DSMButton(title: "Tentar novamente", action: onRetry)
+            DSMButton(title: "Tentar novamente", isLoading: viewModel.isRetrying, action: viewModel.retry)
                 .frame(maxWidth: 200)
         }
         .padding(32)
