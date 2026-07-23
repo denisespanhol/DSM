@@ -8,33 +8,23 @@
 import SwiftUI
 
 public struct DSMTextField: View {
-    let placeholder: String
-    @Binding var text: String
-    var isSecure: Bool = false
-    var errorMessage: String? = nil
+    
+    @ObservedObject private var viewModel: DSMTextFieldViewModel
 
-    public init(
-        placeholder: String,
-        text: Binding<String>,
-        isSecure: Bool = false,
-        errorMessage: String? = nil
-    ) {
-        self.placeholder = placeholder
-        self._text = text
-        self.isSecure = isSecure
-        self.errorMessage = errorMessage
+    public init(viewModel: DSMTextFieldViewModel) {
+        self.viewModel = viewModel
     }
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            if isSecure {
-                SecureField(placeholder, text: $text)
+            if viewModel.isSecure {
+                SecureField(viewModel.placeholder, text: $viewModel.text)
             } else {
-                TextField(placeholder, text: $text)
+                TextField(viewModel.placeholder, text: $viewModel.text)
             }
             
-            if let error = errorMessage {
-                Text(error)
+            if viewModel.hasError {
+                Text(viewModel.errorMessage ?? "")
                     .font(DSMTypography.caption)
                     .foregroundColor(DSMColors.error)
             }
