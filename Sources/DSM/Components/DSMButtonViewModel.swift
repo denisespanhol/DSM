@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 public class DSMButtonViewModel: ObservableObject {
     public let title: String
     public let style: DSMButtonStyle
